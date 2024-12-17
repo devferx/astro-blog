@@ -25,6 +25,11 @@ const authorCollection = defineCollection({
     z.object({
       name: z.string(),
       avatar: image(),
+      twitter: z.string(),
+      github: z.string(),
+      linkedIn: z.string(),
+      bio: z.string(),
+      subtitle: z.string(),
     }),
 });
 
