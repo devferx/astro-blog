@@ -6,7 +6,10 @@ import TypedBlogPost from "@/components/TypedBlogPost.astro";
 
 import { siteConfig } from "../config/site-config";
 
-const blogPosts = await getCollection("blog");
+const blogPosts = await getCollection(
+  "blog",
+  (post) => post.data.isDraft === false,
+);
 ---
 
 <MainLayout title="Fernando's Blog">
