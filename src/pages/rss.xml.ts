@@ -28,6 +28,13 @@ export const GET: APIRoute = async ({ params, request, site }) => {
       content: sanitizeHtml(parser.render(body), {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
       }),
+      customData: `<media:content
+        type="image/${data.image.format === "jpg" ? "jpeg" : "png"}"
+        width="${data.image.width}"
+        height="${data.image.height}"
+        medium="image"
+        url="${site + data.image.src}" />
+      `,
     })),
 
     // (optional) inject custom xml
