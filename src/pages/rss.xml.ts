@@ -1,6 +1,11 @@
 import { getCollection } from "astro:content";
 import rss from "@astrojs/rss";
+import sanitizeHtml from "sanitize-html";
+
+const parser = new MarkdownIt();
+
 import type { APIRoute } from "astro";
+import MarkdownIt from "markdown-it";
 
 export const GET: APIRoute = async ({ params, request, site }) => {
   const blogPosts = await getCollection("blog");
@@ -15,14 +20,20 @@ export const GET: APIRoute = async ({ params, request, site }) => {
     site: site ?? "",
     // Array of `<item>`s in output xml
     // See "Generating items" section for examples using content collections and glob imports
-    items: blogPosts.map(({ data, slug }) => ({
+    items: blogPosts.map(({ data, slug, body }) => ({
       title: data.title,
       pubDate: data.date,
       description: data.description,
       link: `posts/${slug}`,
+      content: sanitizeHtml(parser.render(body), {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+      }),
     })),
 
     // (optional) inject custom xml
     customData: `<language>es-mx</language>`,
+    xmlns: {
+      media: "http://search.yahoo.com/mrss/",
+    },
   });
 };
